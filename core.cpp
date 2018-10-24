@@ -2,7 +2,7 @@
 #include <system_error>
 #include <thread>
 #include <nnxx/message.h>
-//#include <nnxx/pair.h>
+#include <nnxx/pair.h>
 #include <nnxx/pubsub.h>
 #include <nnxx/socket.h>
 
@@ -16,17 +16,17 @@ int main(int argc,  char** argv) {
         return 1;
     }
 
-    // nnxx::socket s1 { nnxx::SP, nnxx::PAIR };
+     nnxx::socket s1 { nnxx::SP, nnxx::PAIR };
     // nnxx::socket s2 { nnxx::SP, nnxx::PAIR };
-    nnxx::socket s1 { nnxx::SP, nnxx::PUB };
-    nnxx::socket s2 { nnxx::SP, nnxx::SUB };
-    const char *addr = argv[1]; // "ipc:///tmp/foo.ipc";
+    // nnxx::socket s1 { nnxx::SP, nnxx::PUB };
+    // nnxx::socket s2 { nnxx::SP, nnxx::SUB };
+    const char *addr = argv[1];
     std::cout << "CORE( connection to Flex via " << addr << ")" << std::endl;
 
      s1.bind(addr);
     //s2.connect(addr);
-    std::this_thread::sleep_for(5s);
-    std::cout << "CORE(waited 5s)" << std::endl;
+    std::this_thread::sleep_for(1s);
+    std::cout << "CORE(waited 1s)" << std::endl;
 
     if (s1.send("Hello World!") != 12) {
       std::cerr << "CORE(Was not able to send hello world)" << std::endl;

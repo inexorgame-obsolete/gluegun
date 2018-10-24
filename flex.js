@@ -5,7 +5,7 @@ const process = require('process');
 const spawn = require('child_process').spawn;
 
 var pub = nano.socket('pub');
-var sub = nano.socket('sub');
+var sub = nano.socket('pair');
 sub.rcvtimeo(500);
 
 // create the publisher
@@ -43,9 +43,9 @@ function sleep(ms) {
 }
 
 async function take_action() {
-    console.log('FLEX: Delaying 2s for handshake...');
+    console.log('FLEX: Delaying 0.5s for handshake...');
 
-    await sleep(2000);
+    await sleep(500);
 
     /*
     console.log("FLEX: Sending Hello from flex");
@@ -62,8 +62,7 @@ async function take_action() {
     sub.connect(addr);
 
     sub.on('data', function (buf) {
-      console.log(`FLEX: RECEIVED DATA!`);
-      console.log(String(buf));
+      console.log(`FLEX: Received data: "${String(buf)}"`);
       sub.close();
     });
 }
