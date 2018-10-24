@@ -9,7 +9,7 @@ class nanomsgxxConan(ConanFile):
     generators = "cmake", "txt"
     settings = "os", "compiler", "build_type", "arch"
     exports = "assets/*"
-    requires = "nanomsg/1.0.0@Wi3ard/stable"
+    requires = "nanomsg/1.0.0@inexorgame/testing"
     short_paths = True
     options = {"enable_tests": [True, False],
                }
@@ -25,25 +25,10 @@ class nanomsgxxConan(ConanFile):
         shutil.move("assets/cmake/DetectCXXCompiler.cmake", "nanomsgxx/cmake")
 
     def build(self):
-        cmake = CMake(self.settings)
-
-        cmake_options = []
-        for option_name in self.options.values.fields:
-            activated = getattr(self.options, option_name)
-            the_option = "%s=" % option_name.upper()
-            if option_name == "enable_tests":
-               the_option = "NNXX_TESTS=ON" if activated else "NNXX_TESTS=OFF"
-            else:
-               the_option += "ON" if activated else "OFF"
-            cmake_options.append(the_option)
-
-        cmake_cmd_options = " -D".join(cmake_options)
-
-        cmake_conf_command = 'cmake %s/nanomsgxx %s -DCMAKE_INSTALL_PREFIX:PATH=install -D%s' % (self.conanfile_directory, cmake.command_line, cmake_cmd_options)
-        self.output.warn(cmake_conf_command)
-        self.run(cmake_conf_command)
-
-        self.run("cmake --build . --target install %s" % cmake.build_config)
+        cmake = CMake(self)
+        cmake.configure(source_folder="nanomsgxx")
+        cmake.build()
+        cmake.install()
 
     def package(self):
         self.copy("*", dst="bin", src="install/bin")
