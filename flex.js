@@ -6,55 +6,68 @@ const spawn = require('child_process').spawn;
 
 var pub = nano.socket('pub');
 var sub = nano.socket('sub');
+sub.rcvtimeo(500);
 
 // create the publisher
 
-console.log("Creating Flex Publisher!");
-const addr = 'tcp://127.0.0.1:65000'; // 'ipc:///tmp/foo.ipc';
-pub.bind(addr);
+const addr = 'tcp://127.0.0.1:65000'; // 'ipc:///synchrotest.ipc';
 
-
-// connect from in here
-/*
-sub.connect(addr);
-
-sub.on('data', function (buf) {
-  console.log(String(buf));
-  pub.close();
-  sub.close();
-});
-*/
+// console.log("FLEX: Creating Publisher!");
+//pub.bind(addr);
 
 // execute core
-console.log("Starting up core!");
+console.log("FLEX: Launching core!");
 
 const args = [addr];
 const executable_path = "build/core";
 
-let options = {
-    //cwd: executable_folder,
-    env: process.env
-};
-const core_process = spawn(executable_path, args, options);
+const core_process = spawn(executable_path, args);
 core_process.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
+    console.log(`FLEX: stdout from core! ${data}`);
 });
 core_process.stderr.on('data', (data) => {
-  console.log(`stderr: ${data}`);
+    console.log(`FLEX: stderr from core! : ${data}`);
 });
 core_process.on('error', (err) => {
-    console.log("error!");
+    console.log("FLEX: error!");
 });
 core_process.on('exit', (code, signal) => {
-    console.log("exit!");
+  console.log(`FLEX: core process exited with code ${code} from signal ${signal}`);
+});
+core_process.on('close', (code) => {
+  console.log(`FLEX: core process closed with code ${code}`);
 });
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-console.log("Sending Hello from flex");
+async function take_action() {
+    console.log('FLEX: Delaying 2s for handshake...');
 
-// send hello world to the subscribers
-setTimeout(function () {
-  pub.send("Hello from nanomsg!");
-}, 100);
-console.log("Sent from flex");
+    await sleep(2000);
+
+    /*
+    console.log("FLEX: Sending Hello from flex");
+    // send hello world to the subscribers
+    setTimeout(function () {
+        pub.send("This is the hello world message!\0");
+    }, 100);
+    console.log("FLEX: Sent from flex");
+    */
+
+    // connect from in here
+    console.log(`FLEX: Connecting to ${addr}`);
+
+    sub.connect(addr);
+
+    sub.on('data', function (buf) {
+      console.log(`FLEX: RECEIVED DATA!`);
+      console.log(String(buf));
+      sub.close();
+    });
+}
+
+take_action();
+
 
