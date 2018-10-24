@@ -1,0 +1,67 @@
+*.o
+*.gch
+/.idea
+/.project
+/.cproject
+.*.sw*
+
+packages
+data
+config
+media/*/*
+!media/core/*
+src/vcpp
+src/xcode
+src/rpggame
+src/include
+src/lib
+src/lib64
+src/enet
+rpg.bat
+
+doc/*
+!doc/mainpage.md
+
+eclipse
+codeblocks
+xcode
+
+build*
+cmake-build-*
+bin*
+
+Debug
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Dependency directories
+node/node_modules
+node/public/bower_components
+node/assets/bower_components
+node/assets/build
+node/jspm_packages
+
+# Optional npm cache directory
+node/.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Python compiled
+*.pyc
+
+# Node.js
+node_modules/
+
+# This file gets generated.
+dependencies.md
+
+.ropeproject
