@@ -1,0 +1,15 @@
+{
+  "name": "synchro-flex",
+  "version": "0.0.1",
+  "description": "A simple example demonstrating flex->core communication.",
+  "main": "flex.js",
+  "author": "a_teammate <madoe3@web.de>",
+  "license": "MIT",
+  "scripts": {
+    "flex": "node flex.js"
+  },
+  "dependencies": {
+    "nanomsg": "^4.0.2"
+  }
+}
+
