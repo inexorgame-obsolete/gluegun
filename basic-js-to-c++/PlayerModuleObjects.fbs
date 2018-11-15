@@ -1,0 +1,38 @@
+include "DistributedStateAddress.fbs";
+include "PlayerBuffer.fbs";
+
+namespace PlayerModule;
+
+/// The list of all message object types in this module.
+union Any {
+    PlayerBuffer
+}
+
+table Change {
+    change_set:Any;
+}
+
+table NewEntry {
+    // This element specifies the address of the new entry, but there also is the address coming from the router,
+    // which is the the address of the parent (i.e. the address of the list in which this entry is put into).
+    entry_address:distributed_state.Address;
+    initial_state:Any;
+}
+
+table RemoveEntry {
+
+}
+
+/// A message containing the kind of a message.
+union AnyMessageKind { Change, NewEntry, RemoveEntry }
+
+table OneMessage {
+    module_info:AnyMessageKind;
+}
+
+// TODO: reason whether it makes sense to remove OneMessage and replace it with asRoot() +
+//       emplace two additional object_addresses, one for each.
+//       we send one byte less with each message, but the size of the lookup map increases with 3 times the speed.
+//       -> benchmark first.
+
+root_type OneMessage;
