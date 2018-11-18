@@ -19,10 +19,10 @@ public:
     void set_kills(int new_killcount);
 
     /// Patch a Player with a changeset in a Buffer-object.
-    void update_from_patch(MyGame::PlayerBuffer &buffer);
+    void update_from_patch(uint8_t *raw_buffer, size_t len);
 
     /// Create a Buffer which contains everything which changed before this function was called the last time.
-    MyGame::PlayerBuffer create_patch_from_dirty();
+    uint8_t * create_patch_from_dirty(size_t &len);
 };
 
 void testplayer();
