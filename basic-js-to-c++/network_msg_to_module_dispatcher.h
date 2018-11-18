@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "DistributedStateAddress_generated.h"
 
-
+/*
 /// Acts as a router for network messages to the module which owns the objects for that message.
 /// Therefore a module needs to register the addresses of these objects.
 class NetworkMsgToModuleDispatcher {
@@ -13,7 +13,23 @@ class NetworkMsgToModuleDispatcher {
                        std::function<void(const distributed_state::Address &,
                                           const uint8_t *const buffer,
                                           size_t len)>> address_to_module_map;
+    uint16_t object_id_counter = 1; // replaceable with modulemap.size() probably
+
 public:
+
+    /// Receive a new distributed state address, to register an object created on this endpoint.
+    distributed_state::Address get_new_distributed_state_address(bool created_locally = true) {
+        constexpr uint16_t own_network_id = 0; // 0 is core, 1 is flex for now.
+        constexpr uint16_t remote_network_id = 1; // 0 is core, 1 is flex for now.
+
+        flatbuffers::FlatBufferBuilder builder;
+        auto addressbuffer = distributed_state::CreateAddress(builder,
+                                                              own_network_id ? created_locally : remote_network_id,
+                                                              object_id_counter++);
+        builder.Finish(addressbuffer);
+        uint8_t *buf = builder.GetBufferPointer();
+        return *distributed_state::GetAddress(buf);
+    }
 
     /// Register all of the given object addresses, to forward incoming messages to their corresponding module dispatcher.
     /// @param object_addresses: A vector of addresses corresponding to the module.
@@ -36,4 +52,4 @@ public:
     void dispatch(const uint8_t *buffer, size_t len);
 };
 
-
+*/

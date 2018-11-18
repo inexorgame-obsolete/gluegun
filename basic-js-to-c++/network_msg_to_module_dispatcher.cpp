@@ -3,7 +3,7 @@
 #include <functional>
 #include <unordered_map>
 #include "DistributedStateAddress_generated.h"
-
+/*
 void NetworkMsgToModuleDispatcher::register_module_object_addresses(
         const std::vector<distributed_state::Address> &object_addresses,
       // const char * const module_readable_name,
@@ -40,4 +40,4 @@ void NetworkMsgToModuleDispatcher::dispatch(const uint8_t *buffer, size_t len)
     catch(std::out_of_range &e) {
         // TODO: log error here: no module available anymore.
     }
-}
+}*/
