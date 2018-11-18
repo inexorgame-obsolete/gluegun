@@ -12,6 +12,9 @@ private:
     bool name_field_is_dirty = true;
     int kills;
     bool kills_field_is_dirty = true;
+
+    // used for serialization
+    flatbuffers::FlatBufferBuilder builder;
 public:
     std::string get_name() { return name; }
     void set_name(std::string new_name);

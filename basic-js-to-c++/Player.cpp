@@ -27,7 +27,6 @@ void PlayerData::update_from_patch(uint8_t *raw_buffer, size_t len) {
 }
 
 uint8_t * PlayerData::create_patch_from_dirty(size_t &len) {
-    flatbuffers::FlatBufferBuilder builder;
 
     // construct entries first..
     const auto name_field_or_null = name_field_is_dirty
@@ -60,7 +59,6 @@ void testplayer() {
     size_t player_buffer_size = 0;
     uint8_t *player_buffer = player1.create_patch_from_dirty(player_buffer_size);
     player2.update_from_patch(player_buffer, player_buffer_size);
-    // TODO delete?
 
     assert(player1.get_name() == player2.get_name());
     assert(player1.get_kills() == player2.get_kills());
