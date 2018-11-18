@@ -52,6 +52,7 @@ uint8_t * PlayerData::create_patch_from_dirty(size_t &len) {
 
 void testplayer() {
 
+    // Clone player1 into an empty player2
     PlayerData player1, player2;
     player1.set_name("Player1");
     player1.set_kills(3);
@@ -62,4 +63,13 @@ void testplayer() {
 
     assert(player1.get_name() == player2.get_name());
     assert(player1.get_kills() == player2.get_kills());
+
+    // update player1 and send just the change
+    PlayerData player3;
+
+    player1.set_kills(3);
+    player_buffer = player1.create_patch_from_dirty(player_buffer_size);
+    player3.update_from_patch(player_buffer, player_buffer_size);
+    assert(player3.get_name() == "");
+    assert(player1.get_kills() == player3.get_kills());
 }
