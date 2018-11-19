@@ -1,6 +1,9 @@
 const flatbuffers = require("./flatbuffers-master/js/flatbuffers").flatbuffers;
 const PlayerModule = require("./PlayerBuffer_generated").PlayerModule;
 
+const nano = require('nanomsg');
+const spawn = require('child_process').spawn;
+
 class Player {
     constructor() {
         this._name_value = "";
@@ -60,12 +63,19 @@ class Player {
 }
 // Attention: JS is async. any notes to take for the syncing procedure?
 
-function test_serialisation() {
-    let player1 = new Player();
-    player1.name = "player1Name";
-    player1.kills = 2;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    const buf = player1.create_patch_from_dirty();
+function get_player1s_initial_state_patch() {
+    let player1 = new Player();
+    player1.name = "player1's Initial State";
+    player1.kills = 2;
+    return player1.create_patch_from_dirty();
+}
+
+function test_serialisation() {
+    const buf = get_player1s_initial_state_patch();
 
     let player2 = new Player();
 
@@ -74,4 +84,73 @@ function test_serialisation() {
     console.log(`player2 name: ${player2.name}, kills = ${player2.kills}`);
 }
 
-test_serialisation();
+function CoreLauncher() {
+    console.log("FLEX: Launching core!");
+
+    const args = [addr];
+    const executable_path = "cmake-build-debug/basic_js_to_c__";
+
+    this.core_process = spawn(executable_path, args);
+
+    // set all kinds of callbacks
+    this.core_process.stdout.on('data', (data) => {
+        console.log(`FLEX: stdout from core! ${data}`);
+    });
+    this.core_process.stderr.on('data', (data) => {
+        console.log(`FLEX: stderr from core! : ${data}`);
+    });
+    this.core_process.on('error', (err) => {
+        console.log("FLEX: error!");
+    });
+    this.core_process.on('exit', (code, signal) => {
+        console.log(`FLEX: core process exited with code ${code} from signal ${signal}`);
+    });
+    this.core_process.on('close', (code) => {
+        console.log(`FLEX: core process closed with code ${code}`);
+    });
+
+}
+
+// -------------
+
+// create a nanomsg endpoint ("server", but not serving anything.
+// Just the one who created the endpoint first).
+
+let connection = nano.socket('pair');
+connection.rcvtimeo(500);
+const addr = 'tcp://127.0.0.1:65000'; // 'ipc:///synchrotest.ipc';
+connection.bind(addr);
+console.log(`FLEX: Created an endpoint on ${addr}`);
+
+// on a new connection / i.e. new data with size 1, value 1:
+//    -> send player1's initial state
+//    -> set connection_established = true;
+// on new data:
+//      patch player1
+//      console.log the new state
+//      disconnect
+//      exit
+// 2. wait up to 20s for receiving a player name change
+
+let core_connected = false;
+
+connection.on('data', function (buf) {
+    if (!core_connected) {
+        console.log(`FLEX: New Connection. Received data: "${buf}"\n
+                    Sending the initial player state`);
+        const initial_state_patch = get_player1s_initial_state_patch();
+        connection.send(initial_state_patch);
+        core_connected = true;
+    } else {
+        console.log(`FLEX: New Patch Received.`);
+
+        let player2 = new Player();
+        player2.update_from_patch(buf);
+        console.log(`player new name: ${player2.name}, kills = ${player2.kills}`);
+
+        connection.close();
+    }
+});
+
+// spawn c++ side
+let core = new CoreLauncher();
