@@ -4,12 +4,12 @@
  * @const
  * @namespace
  */
-var MyGame = MyGame || {};
+var PlayerModule = PlayerModule || {};
 
 /**
  * @constructor
  */
-MyGame.PlayerBuffer = function() {
+PlayerModule.PlayerBuffer = function() {
   /**
    * @type {flatbuffers.ByteBuffer}
    */
@@ -24,9 +24,9 @@ MyGame.PlayerBuffer = function() {
 /**
  * @param {number} i
  * @param {flatbuffers.ByteBuffer} bb
- * @returns {MyGame.PlayerBuffer}
+ * @returns {PlayerModule.PlayerBuffer}
  */
-MyGame.PlayerBuffer.prototype.__init = function(i, bb) {
+PlayerModule.PlayerBuffer.prototype.__init = function(i, bb) {
   this.bb_pos = i;
   this.bb = bb;
   return this;
@@ -34,18 +34,18 @@ MyGame.PlayerBuffer.prototype.__init = function(i, bb) {
 
 /**
  * @param {flatbuffers.ByteBuffer} bb
- * @param {MyGame.PlayerBuffer=} obj
- * @returns {MyGame.PlayerBuffer}
+ * @param {PlayerModule.PlayerBuffer=} obj
+ * @returns {PlayerModule.PlayerBuffer}
  */
-MyGame.PlayerBuffer.getRootAsPlayerBuffer = function(bb, obj) {
-  return (obj || new MyGame.PlayerBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+PlayerModule.PlayerBuffer.getRootAsPlayerBuffer = function(bb, obj) {
+  return (obj || new PlayerModule.PlayerBuffer).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 };
 
 /**
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-MyGame.PlayerBuffer.prototype.name = function(optionalEncoding) {
+PlayerModule.PlayerBuffer.prototype.name = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -53,15 +53,15 @@ MyGame.PlayerBuffer.prototype.name = function(optionalEncoding) {
 /**
  * @returns {number}
  */
-MyGame.PlayerBuffer.prototype.kills = function() {
+PlayerModule.PlayerBuffer.prototype.kills = function() {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readInt16(this.bb_pos + offset) : 0;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
-MyGame.PlayerBuffer.startPlayerBuffer = function(builder) {
+PlayerModule.PlayerBuffer.startPlayerBuffer = function(builder) {
   builder.startObject(2);
 };
 
@@ -69,7 +69,7 @@ MyGame.PlayerBuffer.startPlayerBuffer = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} nameOffset
  */
-MyGame.PlayerBuffer.addName = function(builder, nameOffset) {
+PlayerModule.PlayerBuffer.addName = function(builder, nameOffset) {
   builder.addFieldOffset(0, nameOffset, 0);
 };
 
@@ -77,15 +77,15 @@ MyGame.PlayerBuffer.addName = function(builder, nameOffset) {
  * @param {flatbuffers.Builder} builder
  * @param {number} kills
  */
-MyGame.PlayerBuffer.addKills = function(builder, kills) {
-  builder.addFieldInt32(1, kills, 0);
+PlayerModule.PlayerBuffer.addKills = function(builder, kills) {
+  builder.addFieldInt16(1, kills, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-MyGame.PlayerBuffer.endPlayerBuffer = function(builder) {
+PlayerModule.PlayerBuffer.endPlayerBuffer = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -94,9 +94,9 @@ MyGame.PlayerBuffer.endPlayerBuffer = function(builder) {
  * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} offset
  */
-MyGame.PlayerBuffer.finishPlayerBufferBuffer = function(builder, offset) {
+PlayerModule.PlayerBuffer.finishPlayerBufferBuffer = function(builder, offset) {
   builder.finish(offset);
 };
 
-// Exports for ECMAScript6 Modules
-export {MyGame};
+// Exports for Node.js and RequireJS
+this.PlayerModule = PlayerModule;

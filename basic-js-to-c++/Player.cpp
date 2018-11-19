@@ -48,6 +48,7 @@ uint8_t * PlayerData::create_patch_from_dirty(size_t &len) {
 
     len = builder.GetSize();
     return builder.GetBufferPointer();
+    // TODO: when does the builder get resetted?
 }
 
 void testplayer() {
