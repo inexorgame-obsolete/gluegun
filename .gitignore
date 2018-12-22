@@ -5,6 +5,7 @@
 /.cproject
 .*.sw*
 
+vendor/
 packages
 data
 config
