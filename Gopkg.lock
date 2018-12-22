@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
+  name = "github.com/Microsoft/go-winio"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "97e4973ce50b2ff5f09635a57e2b88a037aae829"
+  version = "v0.4.11"
+
+[[projects]]
   digest = "1:e02b687ade0c19c038ecce3ea326d756519adc4bba1203a9e76d620b12354892"
   name = "github.com/google/flatbuffers"
   packages = ["go"]
@@ -10,19 +18,52 @@
   version = "v1.10.0"
 
 [[projects]]
-  digest = "1:560bc0945ab823044c2328951d6fa20c27da2386681bb6813a3df1f157297564"
-  name = "github.com/nanomsg/mangos-v2"
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
   packages = ["."]
   pruneopts = "UT"
-  revision = "c289f0f3165d00720e9dcef856b52d799f0bb008"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
   version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:68a4638398cf8c864a6aa50c8853ebe7935f939aa3acf7e44cb35b67852e9fef"
+  name = "golang.org/x/sys"
+  packages = ["windows"]
+  pruneopts = "UT"
+  revision = "b4a75ba826a64a70990f11a225237acd6ef35c9f"
+
+[[projects]]
+  digest = "1:aada4f875070ec002a1af455efc3401474cf7fdee7c2dffbde2ebf6ba475ee1a"
+  name = "nanomsg.org/go/mangos/v2"
+  packages = [
+    ".",
+    "errors",
+    "internal/core",
+    "protocol",
+    "protocol/pair",
+    "protocol/xpair",
+    "transport",
+    "transport/all",
+    "transport/inproc",
+    "transport/ipc",
+    "transport/tcp",
+    "transport/tlstcp",
+    "transport/ws",
+    "transport/wss",
+  ]
+  pruneopts = "UT"
+  revision = "63f66a65137b9a648ac9f7bf0160b4a4d17d7999"
+  version = "v2.0.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/google/flatbuffers/go",
-    "github.com/nanomsg/mangos-v2",
+    "nanomsg.org/go/mangos/v2",
+    "nanomsg.org/go/mangos/v2/protocol/pair",
+    "nanomsg.org/go/mangos/v2/transport/all",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

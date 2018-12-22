@@ -24,10 +24,15 @@
 #   go-tests = true
 #   unused-packages = true
 
-[prune]
-  go-tests = true
-  unused-packages = false # not for now
 
 [[constraint]]
-  name = "github.com/nanomsg/mangos-v2"
-  version = "1.4.0"
+  name = "github.com/google/flatbuffers"
+  version = "1.10.0"
+
+[[constraint]]
+  name = "nanomsg.org/go/mangos/v2"
+  version = "2.0.1"
+
+[prune]
+  go-tests = true
+  unused-packages = true
