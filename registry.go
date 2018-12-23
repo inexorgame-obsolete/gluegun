@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"nanomsg.org/go/mangos/v2"
-	"nanomsg.org/go/mangos/v2/protocol/pair"
+	"nanomsg.org/go/mangos/v2/protocol/bus"
 
 	// register transports
 	_ "nanomsg.org/go/mangos/v2/transport/all"
@@ -29,7 +29,7 @@ func receiveString(sock mangos.Socket) {
 
 func createServerNode(url string) (sock mangos.Socket) {
 	var err error
-	if sock, err = pair.NewSocket(); err != nil {
+	if sock, err = bus.NewSocket(); err != nil {
 		die("can't get new pair socket: %s", err)
 	}
 	if err = sock.Listen(url); err != nil {
@@ -48,14 +48,17 @@ func main() {
 	signal.Notify(gracefulStop, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		sig := <-gracefulStop
-		fmt.Printf("caught sig: %+v", sig)
+		_ = <-gracefulStop
+		fmt.Println("Closing server. Beep bop.")
 
-		serverSock.Close()
+		if err := serverSock.Close(); err != nil {
+			die("can't close socket: %s", err.Error())
+		}
 		os.Exit(0)
 	}()
 
 	// Send and Receive some data on that address
+	fmt.Println("Started server successfully. Waiting for instructions.")
 
 	ticker := time.NewTicker(500 * time.Millisecond)
 	func() {

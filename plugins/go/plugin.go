@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"nanomsg.org/go/mangos/v2"
-	"nanomsg.org/go/mangos/v2/protocol/pair"
+	"nanomsg.org/go/mangos/v2/protocol/bus"
 	"os"
 	"time"
 
@@ -28,7 +28,7 @@ func sendString(sock mangos.Socket, name string) {
 
 func createClientNode(url string) (sock mangos.Socket) {
 	var err error
-	if sock, err = pair.NewSocket(); err != nil {
+	if sock, err = bus.NewSocket(); err != nil {
 		die("can't get new pair socket: %s", err)
 	}
 	if err = sock.Dial(url); err != nil {
