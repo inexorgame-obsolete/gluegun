@@ -1,30 +1,27 @@
 namespace inexorgame.plugin;
 
-/// Describes the base type of any plugin
-/// This includes the address where to find the plugin (e.g: the socket)
-table Plugin {
-    addr:string;
-}
-
 /// Describes the possible signals in gluegun
-/// Currently supported SIGNALS are
-/// - REGISTER (used on registration)
-/// - PEER (instructs a plugin to connect to another plugin)
-/// - LOG (logs a message)
-/// - SHUTDOWN (issued before shutdown)
-enum Signal : byte {
-    REGISTER,
-    PEER,
-    LOG,
+enum LIFECYCLE_SIGNALS : byte {
+    /// a Plugin asks for registration to the registry/a plugin
+    REGISTER_ME,
+
+    /// instructs a plugin to register itself to another plugin
+    PAIR_WITH_PLUGIN,
+
+    /// registry asks a plugin to shut down
     SHUTDOWN = 127
 }
 
-union Content { Plugin, LogMessage }
+/// information about a component / plugin to identify it (e.g. for registration)
+table Plugin {
+    /// The socket address of this plugin
+    address:string;
+}
 
 /// Describes the gluegun root type which can contain components or log messages
 table Message {
-    signal:Signal;
-    message:Content;
+    lifecycle_signal:LIFECYCLE_SIGNALS;
+    message:Plugin;
 }
 
 root_type Message;
