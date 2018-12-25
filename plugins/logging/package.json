@@ -9,7 +9,8 @@
     "flex": "node flex.js"
   },
   "dependencies": {
+    "bunyan": "^1.8.12",
+    "flatbuffers": "^1.10.2",
     "nanomsg": "^4.0.2"
   }
 }
-

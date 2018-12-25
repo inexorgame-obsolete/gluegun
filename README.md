@@ -57,10 +57,10 @@ The above process can be visualized like this:
 
 Running `gluegun` is quite easy, given that you have `go` and `flatc` installed:
 
-- `cd ${GOPATH}/github.com/inexorgame/gluegen` (you should have cloned this repository here)
+- `cd ${GOPATH}/github.com/inexorgame/gluegun` (you should have cloned this repository here)
 - `go get -u github.com/google/flatbuffers/go`
+- `flatc gluegun.fbs --go -o ../../` (this will generate the files to `github.com/inexorgame/plugin`)
 - `dep ensure`
-- `flatc gluegun.fbs --go -o ../../` (this will generate the `gluegen.fbs` definition into `github.com/inexorgame/plugin`)
 - `go run gluegun.go`
 
 ## Building a component
