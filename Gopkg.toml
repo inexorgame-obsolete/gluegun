@@ -24,6 +24,7 @@
 #   go-tests = true
 #   unused-packages = true
 
+ignored = ["github.com/inexorgame/plugin"]
 
 [[constraint]]
   name = "github.com/google/flatbuffers"
@@ -36,3 +37,4 @@
 [prune]
   go-tests = true
   unused-packages = true
+

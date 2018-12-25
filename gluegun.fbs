@@ -1,4 +1,4 @@
-namespace Inexorgame.Plugin;
+namespace inexorgame.plugin;
 
 /// Describes the possible signals in gluegun
 enum LifeCycleSignals : byte {
@@ -24,4 +24,4 @@ table PluginMessage {
     plugin_id:PluginId;
 }
 
-root_type Message;
+root_type PluginMessage;

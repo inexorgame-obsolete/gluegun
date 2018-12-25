@@ -21,13 +21,13 @@ func die(format string, v ...interface{}) {
 	os.Exit(1)
 }
 
-func receivePluginMessage(sock mangos.Socket) *plugin.Message{
+func receivePluginMessage(sock mangos.Socket) *plugin.PluginMessage{
 	var buf[]byte
 	var err error
-	var msg *plugin.Message
+	var msg *plugin.PluginMessage
 
 	if buf, err = sock.Recv(); err == nil {
-		msg = plugin.GetRootAsMessage(buf, 0)
+		msg = plugin.GetRootAsPluginMessage(buf, 0)
 	}
 
 	return msg
