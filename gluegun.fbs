@@ -19,9 +19,9 @@ table Plugin {
 }
 
 /// Describes the gluegun root type which can contain components or log messages
-table Message {
+table PluginMessage {
     lifecycle_signal:LifeCycleSignals;
-    message:Plugin;
+    lifecycle_message:Plugin;
 }
 
 root_type Message;

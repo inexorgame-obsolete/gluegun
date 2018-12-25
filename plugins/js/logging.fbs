@@ -1,0 +1,24 @@
+namespace Inexorgame.Logging;
+
+include "Inexorgame.Plugin"
+
+enum LogLevel {
+
+}
+
+enum LogSignals {
+
+}
+
+table LogMessage {
+
+}
+
+union MessageType { PluginMessage, LogMessage }
+
+table Message {
+    log_signal:byte;
+    log_message:MessageType;
+}
+
+root_type Message;
