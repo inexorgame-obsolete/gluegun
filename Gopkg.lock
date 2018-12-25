@@ -34,7 +34,7 @@
   revision = "b4a75ba826a64a70990f11a225237acd6ef35c9f"
 
 [[projects]]
-  digest = "1:4eaba1fcad44f973204984d130a3e3957054a6e95c61d6ebd7e052d9cfa112c7"
+  digest = "1:8c579e41fff85e994f3de4dcfac49c41e80b3fc647d234acd079f950e889e847"
   name = "nanomsg.org/go/mangos/v2"
   packages = [
     ".",
@@ -42,9 +42,7 @@
     "internal/core",
     "protocol",
     "protocol/bus",
-    "protocol/pair",
     "protocol/xbus",
-    "protocol/xpair",
     "transport",
     "transport/all",
     "transport/inproc",
@@ -65,7 +63,6 @@
     "github.com/google/flatbuffers/go",
     "nanomsg.org/go/mangos/v2",
     "nanomsg.org/go/mangos/v2/protocol/bus",
-    "nanomsg.org/go/mangos/v2/protocol/pair",
     "nanomsg.org/go/mangos/v2/transport/all",
   ]
   solver-name = "gps-cdcl"

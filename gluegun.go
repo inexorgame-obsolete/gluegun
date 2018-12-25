@@ -12,6 +12,8 @@ import (
 
 	// register transports
 	_ "nanomsg.org/go/mangos/v2/transport/all"
+	// register our flatbuffer
+	"./inexorgame/gluegun"
 )
 
 func die(format string, v ...interface{}) {
@@ -19,12 +21,16 @@ func die(format string, v ...interface{}) {
 	os.Exit(1)
 }
 
-func receiveString(sock mangos.Socket) {
-	var msg []byte
+func receiveRegistryMessage(sock mangos.Socket) *gluegun.Message{
+	var buf[]byte
 	var err error
-	if msg, err = sock.Recv(); err == nil {
-		fmt.Printf("RECEIVED: \"%s\"\n", string(msg))
+	var msg *gluegun.Message
+
+	if buf, err = sock.Recv(); err == nil {
+		msg = gluegun.GetRootAsMessage(buf, 0)
 	}
+
+	return msg
 }
 
 func createServerNode(url string) (sock mangos.Socket) {
@@ -63,11 +69,8 @@ func main() {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	func() {
 		for _ = range ticker.C {
-			// alle 0.5s:
-			// checke ob neue nachricht da ist
-			// sofort:
-			// checke ob signal kill gekommen ist.
-			go receiveString(serverSock)
+			// check every 0.5 for new RegistryMessages
+			go receiveRegistryMessage(serverSock)
 		}
 	}()
 }

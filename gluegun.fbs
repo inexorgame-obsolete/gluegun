@@ -1,4 +1,4 @@
-namespace inexorgame.registry;
+namespace inexorgame.gluegun;
 
 /// Describes the base type of any component
 /// This includes the address where to find the component (e.g: the socket)
@@ -39,9 +39,9 @@ enum Signal : byte {
 union Content { Component, LogMessage }
 
 /// Describes the registry root type which can contain components or log messages
-table RegistryMessage {
+table Message {
     signal:Signal;
     message:Content;
 }
 
-root_type RegistryMessage;
+root_type Message;
