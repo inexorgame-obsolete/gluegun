@@ -5,7 +5,7 @@ enum LIFECYCLE_SIGNALS : byte {
     /// a Plugin asks for registration to the registry/a plugin
     REGISTER_ME,
 
-    /// instructs a plugin to register itself to another plugin
+    /// registry instructs a plugin to register itself to another plugin
     PAIR_WITH_PLUGIN,
 
     /// registry asks a plugin to shut down
