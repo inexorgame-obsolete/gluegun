@@ -6,23 +6,6 @@ table Plugin {
     addr:string;
 }
 
-/// Describes possible log severity
-enum LogLevel : byte {
-    ALL,
-    TRACE,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR,
-    FATAL,
-    OFF = 127
-}
-
-table LogMessage {
-    level:LogLevel;
-    message:string;
-}
-
 /// Describes the possible signals in gluegun
 /// Currently supported SIGNALS are
 /// - REGISTER (used on registration)
