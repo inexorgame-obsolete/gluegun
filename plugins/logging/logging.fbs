@@ -1,0 +1,43 @@
+namespace inexorgame.logging;
+
+include "inexorgame.plugin"
+
+/// Describes which level of severity you are logging.
+enum LogLevel : byte {
+    /// Disable all logging. You're on your own now.
+    Off = 127,
+    /// This is really fine-grained information—finer even than DEBUG.
+    Trace,
+    /// With DEBUG, you start to include more granular, diagnostic information.
+    Debug,
+    /// INFO messages correspond to normal application behavior.
+    Info,
+    /// You use the WARN log level to indicate that you might have a problem and that you’ve detected an unusual situation.
+    Warn,
+    /// An error is a serious issue and represents the failure of something important going on in your application.
+    Error,
+    /// Fatal represents truly catastrophic situations.
+    Fatal
+}
+
+/// Possible log signals
+enum LogSignals : byte {
+    /// Logs a message to the default log output
+    LogMessageToDefault
+}
+
+/// A log message contains severity and content
+table LogMessage {
+    severity:LogLevel;
+    content:string;
+}
+
+union MessageType { PluginMessage, LogMessage }
+
+table Message {
+    signal_type:byte;
+    // Either a plugin message or a log message
+    log_message:MessageType;
+}
+
+root_type Message;
