@@ -1,0 +1,15 @@
+namespace inexorgame.plugins;
+
+// Since this plugin will only consume other plugins none of the below is actually required
+
+/// Signals issued by this componen
+enum Signals : byte {
+
+}
+
+/// The root type for this plugin
+table PluginMessage {
+    signal:Signal;
+}
+
+root_type PluginMessage;

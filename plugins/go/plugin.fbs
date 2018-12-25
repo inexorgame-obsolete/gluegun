@@ -1,0 +1,14 @@
+namespace inexorgame.plugins;
+
+/// Signals issued by this component
+enum Signal : byte {
+    JOKE
+}
+
+/// The root type for this plugin
+table PluginMessage {
+    signal:Signal;
+    joke:string;
+}
+
+root_type PluginMessage;
