@@ -13,15 +13,15 @@ enum LifeCycleSignals : byte {
 }
 
 /// information about a component / plugin to identify it (e.g. for registration)
-table Plugin {
+table PluginId {
     /// The socket address of this plugin
     address:string;
 }
 
 /// Describes the gluegun root type which can contain components or log messages
 table PluginMessage {
-    lifecycle_signal:LifeCycleSignals;
-    lifecycle_message:Plugin;
+    signal_type:LifeCycleSignals;
+    plugin_id:PluginId;
 }
 
 root_type Message;
