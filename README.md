@@ -20,6 +20,7 @@ _gluegun:_
 
 In order to be able to understand each other one must built a _"plugin"_. 
 
+## About plugins
 A `plugin` has two items in it's receipt:
 
 - a list of `SIGNAL`s that can be issued by this `plugin`
