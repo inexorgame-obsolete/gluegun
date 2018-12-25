@@ -21,7 +21,7 @@ func die(format string, v ...interface{}) {
 	os.Exit(1)
 }
 
-func receiveRegistryMessage(sock mangos.Socket) *plugin.Message{
+func receivePluginMessage(sock mangos.Socket) *plugin.Message{
 	var buf[]byte
 	var err error
 	var msg *plugin.Message
@@ -70,7 +70,7 @@ func main() {
 	func() {
 		for _ = range ticker.C {
 			// check every 0.5 for new RegistryMessages
-			go receiveRegistryMessage(serverSock)
+			go receivePluginMessage(serverSock)
 		}
 	}()
 }
