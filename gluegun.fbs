@@ -1,12 +1,12 @@
-namespace inexorgame.plugin;
+namespace Inexorgame.Plugin;
 
 /// Describes the possible signals in gluegun
-enum LIFECYCLE_SIGNALS : byte {
+enum LifeCycleSignals : byte {
     /// a Plugin asks for registration to the registry/a plugin
-    REGISTER_ME,
+    RegisterMe,
 
     /// instructs a plugin to register itself to another plugin
-    PAIR_WITH_PLUGIN,
+    PairWithPlugin,
 
     /// registry asks a plugin to shut down
     SHUTDOWN = 127
@@ -20,7 +20,7 @@ table Plugin {
 
 /// Describes the gluegun root type which can contain components or log messages
 table Message {
-    lifecycle_signal:LIFECYCLE_SIGNALS;
+    lifecycle_signal:LifeCycleSignals;
     message:Plugin;
 }
 
