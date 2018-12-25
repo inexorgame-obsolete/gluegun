@@ -3,48 +3,63 @@
 #include <thread>
 #include <nnxx/message.h>
 #include <nnxx/pair.h>
-#include <nnxx/pubsub.h>
 #include <nnxx/socket.h>
+#include "Player.h"
 
-using namespace std::chrono_literals;
+#include <thread>
 
-int main(int argc,  char** argv) {
-  try {
-    if (argc < 2) {
+PlayerData player;
 
-        std::cerr << "CORE(core executed without listening path)" << std::endl;
+int main(int argc, char **argv) {
+    try {
+        if (argc < 2) {
+
+            std::cerr << "CORE(core executed without listening path)" << std::endl;
+            return 1;
+        }
+
+        nnxx::socket connection{nnxx::SP, nnxx::PAIR};
+        const char *addr = argv[1];
+        std::cout << "CORE( connection to Flex via " << addr << ")" << std::endl;
+
+        // connect and send a ping event
+
+        connection.connect(addr);
+        if (connection.send("Hello World!") != 12) {
+            std::cerr << "CORE(Was not able to send hello world)" << std::endl;
+            return 1;
+        } else {
+            std::cout << "CORE(Sent hello world)" << std::endl;
+        }
+
+        return 0;
+        // wait for player patch
+        std::cout << "CORE(Waiting for initial player state from flex)" << std::endl;
+
+        uint8_t buffery[200];
+        for (int i = 0; i < 200; i++) buffery[i] = 0;
+        int msg = connection.recv(reinterpret_cast<void *>(buffery), 199);
+        // const void * const player_buffer = msg.data();
+        // auto player_buffer_size = msg.size();
+        std::cout << "CORE(Received initial player patch)\nApplying.." << std::endl;
+        using namespace std::chrono_literals;
+        // std::this_thread::sleep_for(20s);
+        player.update_from_patch(buffery, 0); // player_buffer_size);
+
+        std::cout << "CORE( player name: " << player.get_name() <<
+                            "player kills: " << player.get_kills() << ")" << std::endl;
+        // send a new patch
+        player.set_name("Player1");
+        // player.set_kills(3);
+
+        size_t player_buffer_size = 0;
+        const uint8_t *new_player_buffer = player.create_patch_from_dirty(player_buffer_size);
+        connection.send((const void *)new_player_buffer, player_buffer_size);
+        return 0;
+    }
+    catch (const std::system_error &e) {
+        std::cerr << e.what() << std::endl;
         return 1;
     }
-
-     nnxx::socket s1 { nnxx::SP, nnxx::PAIR };
-    // nnxx::socket s2 { nnxx::SP, nnxx::PAIR };
-    // nnxx::socket s1 { nnxx::SP, nnxx::PUB };
-    // nnxx::socket s2 { nnxx::SP, nnxx::SUB };
-    const char *addr = argv[1];
-    std::cout << "CORE( connection to Flex via " << addr << ")" << std::endl;
-
-     s1.bind(addr);
-    //s2.connect(addr);
-    std::this_thread::sleep_for(1s);
-    std::cout << "CORE(waited 1s)" << std::endl;
-
-    if (s1.send("Hello World!") != 12) {
-      std::cerr << "CORE(Was not able to send hello world)" << std::endl;
-      return 1;
-    }
-    else {
-      std::cout << "CORE(Sent hello world)" << std::endl;
-    }
-/*
-    std::cout << "CORE(Waiting for Hello World! from flex)" << std::endl;
-
-    nnxx::message msg = s2.recv();
-    std::cout << "CORE(Received message: " << msg << ")" << std::endl;*/
-    return 0;
-  }
-  catch (const std::system_error &e) {
-    std::cerr << e.what() << std::endl;
-    return 1;
-  }
 }
 

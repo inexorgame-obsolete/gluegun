@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream>
 
 /// Set the name of the player and send the update to JS.
 void PlayerData::set_name(std::string new_name) {
@@ -15,7 +15,9 @@ void PlayerData::set_kills(int new_killcount) {
 }
 
 void PlayerData::update_from_patch(uint8_t *raw_buffer, size_t len) {
-    const auto buffer = MyGame::GetPlayerBuffer(raw_buffer);
+    const auto buffer = PlayerModule::GetPlayerBuffer(raw_buffer);
+    //if (PlayerModule::VerifyPlayerBufferBuffer(buffer))// bool Play:: // TODO: MYgame -> PlayerModule?
+    std::cout << buffer->kills() << std::endl;
     if (flatbuffers::IsFieldPresent(buffer, buffer->VT_KILLS)) {
         kills = buffer->kills();
         kills_field_is_dirty = false;
@@ -34,7 +36,7 @@ uint8_t * PlayerData::create_patch_from_dirty(size_t &len) {
                                     : flatbuffers::Offset<flatbuffers::String>();
 
     // construct the table
-    MyGame::PlayerBufferBuilder player_buffer_builder(builder);
+    PlayerModule::PlayerBufferBuilder player_buffer_builder(builder);
     if (kills_field_is_dirty)
         player_buffer_builder.add_kills(kills);
     if (name_field_is_dirty)
