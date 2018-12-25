@@ -10,7 +10,7 @@ conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
 # Flatbuffers (temporary, will become conan)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/flatbuffers-master/include")
 
-# The parent dir of all plugins
+# The gluegun dir
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../..")
 
 add_executable(rendering_plugin rendering_plugin.cpp)
