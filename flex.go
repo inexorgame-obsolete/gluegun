@@ -90,14 +90,14 @@ func main() {
     var addr string = "ipc:///tmp/synchrotest7.ipc"
     // Create a nanomsg endpoint
     var server_sock = create_server_node(addr)
-    defer server_sock.Close()
+
     // Send and Receive some data on that address
 	go sendRecv(server_sock, "node0")
     // spawn core to connect to the endpoint
     var core_executable_path string = "build/core"
     go exec_command(core_executable_path, addr)
     time.Sleep(time.Second)
-    // die("Here I goo")
+
     server_sock.Close()
     os.Exit(12)
 }
