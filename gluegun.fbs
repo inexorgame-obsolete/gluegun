@@ -9,7 +9,7 @@ enum LifeCycleSignals : byte {
     PairWithPlugin,
 
     /// registry asks a plugin to shut down
-    SHUTDOWN = 127
+    Shutdown = 127
 }
 
 /// information about a component / plugin to identify it (e.g. for registration)
