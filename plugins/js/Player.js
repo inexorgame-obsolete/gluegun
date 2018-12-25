@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const flatbuffers = require("./flatbuffers-master/js/flatbuffers").flatbuffers;
 const PlayerModule = require("./PlayerBuffer_generated").PlayerModule;
 
@@ -28,7 +26,7 @@ class Player {
 
     /// Encode all dirty fields into a PlayerBuffer and return it.
     create_patch_from_dirty() {
-        let builder = new flatbuffers.Builder(1);
+        const builder = new flatbuffers.Builder(0);
 
         // Create some weapons for our Monster ('Sword' and 'Axe').
         let name_str = null;
@@ -46,9 +44,7 @@ class Player {
         this._kills_value_is_dirty = false;
         this._name_value_is_dirty = false;
 
-        const buffer = new Buffer(builder.asUint8Array());
-        console.log(`Buffer: ${buffer}`);
-        return buffer;
+        return builder.dataBuffer();
     }
 
     update_from_patch(buffer) {
@@ -68,10 +64,8 @@ class Player {
 // Attention: JS is async. any notes to take for the syncing procedure?
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms);
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-const fs = require('fs');
 
 function get_player1s_initial_state_patch() {
     let player1 = new Player();
@@ -82,24 +76,19 @@ function get_player1s_initial_state_patch() {
 
 function test_serialisation() {
     const buf = get_player1s_initial_state_patch();
-    fs.writeFileSync('test.txt', buf);
 
     let player2 = new Player();
-    const data = new flatbuffers.ByteBuffer(fs.readFileSync('test.txt'));
-    // const data2 = new flatbuffers.ByteBuffer(data);
-    // console.log(data.toString());
-    player2.update_from_patch(data);
+
+    player2.update_from_patch(buf);
 
     console.log(`player2 name: ${player2.name}, kills = ${player2.kills}`);
-
 }
-// test_serialisation();
 
 function CoreLauncher() {
     console.log("FLEX: Launching core!");
 
     const args = [addr];
-    const executable_path = "build/core";
+    const executable_path = "cmake-build-debug/basic_js_to_c__";
 
     this.core_process = spawn(executable_path, args);
 
@@ -129,20 +118,27 @@ function CoreLauncher() {
 
 let connection = nano.socket('pair');
 connection.rcvtimeo(500);
-const addr =  'ipc:///tmp/synchrotest.ipc'; // 'tcp://127.0.0.1:65000'; //
+const addr = 'tcp://127.0.0.1:65000'; // 'ipc:///synchrotest.ipc';
 connection.bind(addr);
 console.log(`FLEX: Created an endpoint on ${addr}`);
+
+// on a new connection / i.e. new data with size 1, value 1:
+//    -> send player1's initial state
+//    -> set connection_established = true;
+// on new data:
+//      patch player1
+//      console.log the new state
+//      disconnect
+//      exit
+// 2. wait up to 20s for receiving a player name change
 
 let core_connected = false;
 
 connection.on('data', function (buf) {
-    // the first data we receive is the ping event from a freshly
-    // connected endpoint.
     if (!core_connected) {
         console.log(`FLEX: New Connection. Received data: "${buf}"\n
                     Sending the initial player state`);
         const initial_state_patch = get_player1s_initial_state_patch();
-        console.log(`FLEX: Initial state len: "${initial_state_patch.size}"`);
         connection.send(initial_state_patch);
         core_connected = true;
     } else {
@@ -157,35 +153,4 @@ connection.on('data', function (buf) {
 });
 
 // spawn c++ side
-if (process.argv.length <= 2) {
-    let core = new CoreLauncher();
-
-}
-
-/*
-JS:
-1. spawn
-2. create server
-3. wait for connection
-4. send player1
-5. wait for player1-patch
-6. patch player1 with update
-7. console.log player1
-8. quit
-
-C++:
-1. get spawned
-2. connect to server
-3. receive player1 patch
-4. patch player1
-5. std::cout << player1
-6. modify player1
-7. create player1 patch
-8. send player1 patch
-9. quit (wait before?)
-// TODO: add nanomsg dependency to JS
-add nanomsg dependency to core
-add c++ part
-debug
- */
-
+let core = new CoreLauncher();
