@@ -1,6 +1,6 @@
 # gluegun
 
-![gluegun](./gluegun.gif "glue gun")
+![gluegun](./icon.gif "glue gun")
 
 `gluegun` pieces together individual parts of inexor.
 
@@ -51,7 +51,7 @@ Technically, we use [`flatbuffers`](https://google.github.io/flatbuffers/) and [
 
 The above process can be visualized like this:
 
-![bpmn of the process](./gluegun.svg "BPMN of the process")
+![visualization of the registration process](./registration_process.svg "visualization of the registration process")
 
 ## Running gluegun
 
@@ -60,7 +60,7 @@ Running `gluegun` is quite easy, given that you have `go` and `flatc` installed:
 - `cd ${GOPATH}/github.com/inexorgame/gluegen` (you should have cloned this repository here)
 - `go get -u github.com/google/flatbuffers/go`
 - `dep ensure`
-- `flatc gluegun.fbs --go -o ..` (this will generate the `gluegen.fbs` definition into `github.com/inexorgame/plugin`)
+- `flatc gluegun.fbs --go -o ../../` (this will generate the `gluegen.fbs` definition into `github.com/inexorgame/plugin`)
 - `go run gluegun.go`
 
 ## Building a component
@@ -69,4 +69,4 @@ We have illustrated how one can built `plugins` in different languages.
 
 Please have a look at the [`plugins` folder](./plugins).
 
-You will always need to include the [`gluegun.fbs`](./gluegun.fbs) schema in order to be able to talk to `gluegun`
+You will always need to include the [`gluegun.fbs`](./gluegun.fbs) schema in your respective language in order to be able to talk to `gluegun`
