@@ -57,8 +57,10 @@ The above process can be visualized like this:
 
 Running `gluegun` is quite easy, given that you have `go` and `flatc` installed:
 
+- `cd ${GOPATH}/github.com/inexorgame/gluegen` (you should have cloned this repository here)
+- `go get -u github.com/google/flatbuffers/go`
 - `dep ensure`
-- `flatc gluegun.fbs --go`
+- `flatc gluegun.fbs --go -o ..` (this will generate the `gluegen.fbs` definition into `github.com/inexorgame/plugin`)
 - `go run gluegun.go`
 
 ## Building a component
@@ -67,4 +69,4 @@ We have illustrated how one can built `plugins` in different languages.
 
 Please have a look at the [`plugins` folder](./plugins).
 
-You will always need to include the [`gluegun.fbs`](./gluegen.fbs) schema in order to be able to talk to `gluegun`
+You will always need to include the [`gluegun.fbs`](./gluegun.fbs) schema in order to be able to talk to `gluegun`

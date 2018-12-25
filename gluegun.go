@@ -12,8 +12,8 @@ import (
 
 	// register transports
 	_ "nanomsg.org/go/mangos/v2/transport/all"
-	// register our flatbuffer
-	"./inexorgame/gluegun"
+	// gluegun
+	"github.com/inexorgame/plugin"
 )
 
 func die(format string, v ...interface{}) {
@@ -21,13 +21,13 @@ func die(format string, v ...interface{}) {
 	os.Exit(1)
 }
 
-func receiveRegistryMessage(sock mangos.Socket) *gluegun.Message{
+func receiveRegistryMessage(sock mangos.Socket) *plugin.Message{
 	var buf[]byte
 	var err error
-	var msg *gluegun.Message
+	var msg *plugin.Message
 
 	if buf, err = sock.Recv(); err == nil {
-		msg = gluegun.GetRootAsMessage(buf, 0)
+		msg = plugin.GetRootAsMessage(buf, 0)
 	}
 
 	return msg
