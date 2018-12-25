@@ -1,9 +1,0 @@
-
-namespace PlayerModule;
-
-table PlayerBuffer {
-  name:string;
-  kills:int16;
-}
-
-root_type PlayerBuffer;
