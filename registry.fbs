@@ -1,0 +1,47 @@
+namespace inexor.registry;
+
+/// Describes the base type of any component
+/// This includes the address where to find the component (e.g: the socket)
+table Component {
+    addr:string;
+}
+
+/// Describes possible log severity
+enum LogLevel : byte {
+    ALL,
+    TRACE,
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR,
+    FATAL,
+    OFF = 255
+}
+
+table LogMessage {
+    level:LogLevel;
+    message:string;
+}
+
+/// Describes the possible signals in the registry
+/// Currently supported SIGNALS are
+/// - REGISTER (used on
+/// - PEER (instructs a component to connect to another component)
+/// - LOG (logs a message)
+/// - SHUTDOWN (issued before shutdown)
+enum Signal : byte {
+    REGISTER,
+    PEER,
+    LOG,
+    SHUTDOWN = 255
+}
+
+union Content { Component, LogMessage }
+
+/// Describes the registry root type which can contain components or log messages
+table RegistryMessage {
+    signal:Signal;
+    message:Content;
+}
+
+root_type RegistryMessage;
