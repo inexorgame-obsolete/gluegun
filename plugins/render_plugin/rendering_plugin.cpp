@@ -2,7 +2,7 @@
 #include <system_error>
 #include <thread>
 #include <nnxx/message.h>
-#include <nnxx/pair.h>
+#include <nnxx/bus.h>
 #include <nnxx/socket.h>
 
 #include "flatbuffers/flatbuffers.h"
@@ -28,7 +28,7 @@ class RegistryConnection {
         return std::make_tuple(builder.GetBufferPointer(), builder.GetSize());
     }
 public:
-    RegistryConnection() : connection(nnxx::SP, nnxx::PAIR) {
+    RegistryConnection() : connection(nnxx::SP, nnxx::BUS) {
         std::cout << "rendering plugin connecting to registry endpoint on " << addr << std::endl;
         connection.connect(addr);
     }
@@ -38,10 +38,14 @@ public:
     void register_self(const char *own_name) {
         auto msg_and_len = build_registration_message(own_name);
         send_msg(std::get<0>(msg_and_len), std::get<1>(msg_and_len));
+
+        std::cout << "Registration complete" << std::endl;
     }
 
     /// Send a message to the plugin registry
     void send_msg(uint8_t *buffer, size_t buffer_len) {
+
+        std::cout << "Sending message" << std::endl;
         if (connection.send((void *)buffer, buffer_len) != buffer_len) {
             throw std::runtime_error("was not able to send message to registry");
         }

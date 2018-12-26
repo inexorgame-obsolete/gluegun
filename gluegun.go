@@ -21,14 +21,16 @@ func die(format string, v ...interface{}) {
 	os.Exit(1)
 }
 
-func receivePluginMessage(sock mangos.Socket) *plugin.PluginMessage{
-	var buf[]byte
+func receivePluginMessage(sock mangos.Socket) *plugin.PluginMessage {
+	var buffer[]byte
 	var err error
 	var msg *plugin.PluginMessage
 
-	if buf, err = sock.Recv(); err == nil {
-		msg = plugin.GetRootAsPluginMessage(buf, 0)
+	if buffer, err = sock.Recv(); err == nil {
+		msg = plugin.GetRootAsPluginMessage(buffer, 0)
 	}
+
+	fmt.Println("Read message. Yippie yay.")
 
 	return msg
 }
@@ -36,10 +38,10 @@ func receivePluginMessage(sock mangos.Socket) *plugin.PluginMessage{
 func createServerNode(url string) (sock mangos.Socket) {
 	var err error
 	if sock, err = bus.NewSocket(); err != nil {
-		die("can't get new pair socket: %s", err)
+		die("can't get new bus socket: %s", err)
 	}
 	if err = sock.Listen(url); err != nil {
-		die("can't listen on pair socket: %s", err.Error())
+		die("can't listen on bus socket: %s", err.Error())
 	}
 	return
 }
